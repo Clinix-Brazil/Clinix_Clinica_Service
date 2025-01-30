@@ -51,11 +51,15 @@ public class Clinica {
     @Column(name = "especialidade")
     private List<String> especialidades = new ArrayList<>();
 
-    @CollectionTable(name = "clinica_pacientes", joinColumns = @JoinColumn(name = "clinica_id"))
+    @ElementCollection
+    @CollectionTable(
+        name = "clinica_pacientes",
+        joinColumns = @JoinColumn(name = "clinica_id")
+    )
     @Column(name = "paciente_id")
-    private List<Long> pacientes = new ArrayList<>(); // usuários que possuem algum agendamento ou
+    private List<Long> pacientes = new ArrayList<>(); // Lista de IDs dos pacientes que possuem algum vínculo com a clínica
 
-    private String nome;
+    private String nomeFantasia;
 
     @Column(unique = true)
     private String cnpj;
@@ -75,9 +79,8 @@ public class Clinica {
      * private Document comprovanteEndereco;
      */
 
-    // Métodos de negócio
     public void atualizar(Clinica outraClinica) {
-        this.nome = outraClinica.getNome();
+        this.nomeFantasia = outraClinica.getNomeFantasia();
         this.cnpj = outraClinica.getCnpj();
         /*this.endereco = outraClinica.getEndereco(); */
         this.telefone = outraClinica.getTelefone();
