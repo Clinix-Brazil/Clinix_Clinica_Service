@@ -34,6 +34,9 @@ public class Clinica {
     @Column(nullable = false)
     private TipoClinica tipo;
 
+    @Column(name="gerente_id", nullable = false)
+    private Long gerenteId;
+    
     // Referência a Médicos (IDs externos)
     @ElementCollection
     @CollectionTable(name = "clinica_medicos", joinColumns = @JoinColumn(name = "clinica_id"))
@@ -85,6 +88,7 @@ public class Clinica {
         /*this.endereco = outraClinica.getEndereco(); */
         this.telefone = outraClinica.getTelefone();
         this.tipo = outraClinica.getTipo();
+        this.especialidades = outraClinica.getEspecialidades();
     }
 
     public boolean vincular(Long medico_id) {
@@ -111,5 +115,8 @@ public class Clinica {
         return new ArrayList<>(this.pacientes);
     }
 
+    public Boolean isNull(){
+        return false;
+    }
 
 }

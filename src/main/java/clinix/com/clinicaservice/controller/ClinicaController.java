@@ -3,9 +3,6 @@ package clinix.com.clinicaservice.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,8 +46,27 @@ public class ClinicaController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Clinica clinic) {
-        return this.clinicaService.remove(clinic);
+    public boolean delete(@PathVariable Long id) {
+        return this.clinicaService.remove(id);
     }
 
+    @PutMapping("vinculate/{clinic_id}/{medic_id}")
+    public boolean vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
+        return this.clinicaService.vinculateMedic(clinic_id, medic_id);
+    }
+
+    @PutMapping("desvinculate/{clinic_id}/{medic_id}")
+    public boolean desvinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
+        return this.clinicaService.desvinculateMedic(clinic_id, medic_id);
+    }
+
+    @GetMapping("/patients/{id}")
+    public List<Long> getPatients (@PathVariable Long id){
+        return this.clinicaService.getPatients(id);
+    }
+
+    @GetMapping("/medics/{id}")
+    public List<Long> getMedics (@PathVariable Long id){
+        return this.clinicaService.getMedics(id);
+    }
 }

@@ -36,23 +36,47 @@ public class ClinicaService {
 
     }
 
-    public void delete(Long id) {
-        /*TO DO */
-        this.clinicaRepository.deleteById(id);
-    }
-
     public Clinica update(Clinica clinic) {
         /* clinic.atualizar(clinic); */
         return this.clinicaRepository.save(clinic);    
     }
 
-    public boolean remove(Clinica clinic) {
+    public boolean remove(Long id) {
         try{
-            this.clinicaRepository.delete(clinic);
+            this.clinicaRepository.deleteById(id);
             return true;    
         }catch(Exception e){
             return false;
         }
+    }
+
+    public boolean vinculateMedic(Long clinic_id, Long medic_id)
+    {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        if (c.isNull())
+            return false;
+        return c.vincular(medic_id);
+    
+    }
+
+    public boolean desvinculateMedic(Long clinic_id, Long medic_id)
+    {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        if (c.isNull())
+            return false;
+        return c.desvincular(medic_id);
+    
+    }
+
+    public List<Long> getPatients(Long clinic_id) {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        return c.getPacientes();        
+
+    }
+
+    public List<Long> getMedics(Long clinic_id) {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        return c.getMedicos();        
     }
     
 }

@@ -1,8 +1,6 @@
 package clinix.com.clinicaservice.model;
 
-import java.security.Timestamp;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,9 +13,11 @@ public class NullClinica extends Clinica{
     public Long getId() {
         return 0l;
     }
+    @Override
     public TipoClinica getTipo() {
         return TipoClinica.CLINICA_GERAL;
     }
+    @Override
     public String getCnpj() {
         return "83.803.667/0001-50";
     }
@@ -35,12 +35,17 @@ public class NullClinica extends Clinica{
     public LocalTime getHorarioFechamento(){
         return LocalTime.now();
     } 
-
+    @Override
     public List<Long> getMedicos() {
         return Collections.emptyList(); // Lista vazia
     }
-
+    @Override
     public List<String> getEspecialidades() {
         return Collections.emptyList(); // Lista vazia
+    }
+
+    @Override
+    public Boolean isNull(){
+        return true;
     }
 }
