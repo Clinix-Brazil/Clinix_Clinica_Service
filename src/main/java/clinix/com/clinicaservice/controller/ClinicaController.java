@@ -41,7 +41,7 @@ public class ClinicaController {
     }
     
     @PutMapping("/{id}")
-    public Clinica update(@RequestBody Clinica clinic) {
+    public Boolean update(@RequestBody Clinica clinic) {
         return this.clinicaService.update(clinic);
     }
 
@@ -51,7 +51,7 @@ public class ClinicaController {
     }
 
     @PutMapping("vinculate/{clinic_id}/{medic_id}")
-    public boolean vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
+    public Boolean vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
         return this.clinicaService.vinculateMedic(clinic_id, medic_id);
     }
 

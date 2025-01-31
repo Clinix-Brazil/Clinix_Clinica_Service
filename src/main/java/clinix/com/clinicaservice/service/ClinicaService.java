@@ -36,36 +36,66 @@ public class ClinicaService {
 
     }
 
-    public Clinica update(Clinica clinic) {
+    public Boolean update(Clinica clinic) {
         /* clinic.atualizar(clinic); */
-        return this.clinicaRepository.save(clinic);    
+        try {
+            this.clinicaRepository.save(clinic);    
+            return true;
+        }catch (Exception e) {
+            return false;
+        }
+
     }
 
     public boolean remove(Long id) {
         try{
-            this.clinicaRepository.deleteById(id);
-            return true;    
+            
+            if(!this.clinicaRepository.findById(id).isEmpty()){
+                this.clinicaRepository.deleteById(id);
+                return true;
+            }
+            return false; 
+               
         }catch(Exception e){
             return false;
         }
     }
 
+/*     public boolean vinculateMedic(Long clinic_id, Long medic_id)
+    {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        
+        if (!c.isNull()){
+            if (c.vincular(medic_id));
+                this.clinicaRepository.save(c);
+                return true;
+            }
+        return false;   
+    } */
     public boolean vinculateMedic(Long clinic_id, Long medic_id)
     {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        if (c.isNull())
-            return false;
-        return c.vincular(medic_id);
-    
+        
+        if (!c.isNull()){
+            if (c.vincular(medic_id)){
+                this.clinicaRepository.save(c);
+                return true;   
+            };
+        }
+        return false;   
     }
 
     public boolean desvinculateMedic(Long clinic_id, Long medic_id)
     {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        if (c.isNull())
-            return false;
-        return c.desvincular(medic_id);
-    
+        
+        if (!c.isNull()){
+            if (c.desvincular(medic_id)){
+                this.clinicaRepository.save(c);
+                return true;   
+            };
+        }
+        return false;   
     }
 
     public List<Long> getPatients(Long clinic_id) {

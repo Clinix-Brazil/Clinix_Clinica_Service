@@ -91,7 +91,7 @@ public class Clinica {
         this.especialidades = outraClinica.getEspecialidades();
     }
 
-    public boolean vincular(Long medico_id) {
+    public Boolean vincular(Long medico_id) {
         if (!this.medicos.contains(medico_id)) {
             this.medicos.add(medico_id);
             return true;
