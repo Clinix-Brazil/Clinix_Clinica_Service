@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -68,6 +69,8 @@ public class Clinica {
     private String cnpj;
     private String telefone;
 
+    @Version  // Controle de concorrência otimista
+    private Integer version;
     /*
     * TO DO
      * @Embedded
