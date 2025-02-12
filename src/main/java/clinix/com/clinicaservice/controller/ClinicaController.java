@@ -1,5 +1,6 @@
 package clinix.com.clinicaservice.controller;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import clinix.com.clinicaservice.DTO.HorarioDTO;
 import clinix.com.clinicaservice.model.Clinica;
 import clinix.com.clinicaservice.service.ClinicaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -69,4 +73,14 @@ public class ClinicaController {
     public List<Long> getMedics (@PathVariable Long id){
         return this.clinicaService.getMedics(id);
     }
+
+    @PutMapping("/horary/check/{id}")
+    public boolean checkHorary(@PathVariable Long id, @RequestBody LocalTime horary_check) {
+        return this.clinicaService.checkExpediente(id,horary_check);
+    }
+    @PutMapping("/horary/update/{id}")
+    public boolean updateHorary(@PathVariable Long id, @RequestBody HorarioDTO horary) {
+        return this.clinicaService.updateHorary(id,horary);
+    }
+    
 }

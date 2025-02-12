@@ -70,7 +70,7 @@ public class Clinica {
     private String telefone;
 
     @Version  // Controle de concorrência otimista
-    private Integer version;
+    private Integer version = 0;
     /*
     * TO DO
      * @Embedded
@@ -110,6 +110,23 @@ public class Clinica {
         return false;
     }
 
+/*
+ * 20:00 — 06:00
+ * agendar para 05:00 true
+ * agendar para 15:00 false
+ *08:00 — 16:00 
+ * agendar para 05:00 false
+ * agendar para 15:00 true
+ */
+public boolean isDentroDoExpediente(LocalTime horario) {
+    // Caso 1: Se o horário de abertura for menor que o de fechamento (funcionamento normal no mesmo dia)
+    if (horarioAbertura.isBefore(horarioFechamento)) {
+        return !horario.isBefore(horarioAbertura) && !horario.isAfter(horarioFechamento);
+    }
+    // Caso 2: Funcionamento atravessa a meia-noite (Ex: 20:00 - 06:00)
+    return horario.isAfter(horarioAbertura) || horario.isBefore(horarioFechamento);
+}
+
     public List<Long> listarMedicos() {
          return new ArrayList<>(this.medicos);
     }
@@ -120,6 +137,98 @@ public class Clinica {
 
     public Boolean isNull(){
         return false;
+    }
+
+
+    /**
+     * @return Long return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @param tipo the tipo to set
+     */
+    public void setTipo(TipoClinica tipo) {
+        this.tipo = tipo;
+    }
+
+    /**
+     * @return Long return the gerenteId
+     */
+    public Long getGerenteId() {
+        return gerenteId;
+    }
+
+    /**
+     * @param gerenteId the gerenteId to set
+     */
+    public void setGerenteId(Long gerenteId) {
+        this.gerenteId = gerenteId;
+    }
+
+    /**
+     * @return List<Long> return the medicos
+     */
+    public List<Long> getMedicos() {
+        return medicos;
+    }
+
+    /**
+     * @param medicos the medicos to set
+     */
+    public void setMedicos(List<Long> medicos) {
+        this.medicos = medicos;
+    }
+
+    /**
+     * @param especialidades the especialidades to set
+     */
+    public void setEspecialidades(List<String> especialidades) {
+        this.especialidades = especialidades;
+    }
+
+    /**
+     * @param nomeFantasia the nomeFantasia to set
+     */
+    public void setNomeFantasia(String nomeFantasia) {
+        this.nomeFantasia = nomeFantasia;
+    }
+
+    /**
+     * @param cnpj the cnpj to set
+     */
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
+
+    /**
+     * @param telefone the telefone to set
+     */
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    /**
+     * @return Integer return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }
