@@ -41,7 +41,7 @@ public class Clinica {
     // Referência a Médicos (IDs externos)
     @ElementCollection
     @CollectionTable(name = "clinica_medicos", joinColumns = @JoinColumn(name = "clinica_id"))
-    @Column(name = "medico_id")
+    @Column(name = "medico_id") 
     private List<Long> medicos = new ArrayList<>();
 
     @Column(name = "horario_abertura")
