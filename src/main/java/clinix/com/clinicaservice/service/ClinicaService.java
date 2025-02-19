@@ -16,10 +16,12 @@ import jakarta.transaction.Transactional;
 public class ClinicaService {
 
     private final ClinicaRepository clinicaRepository;
+    private final ClinicaMedicoService clinicaMedicoService;
 
     @Autowired
-    public ClinicaService(ClinicaRepository clinicaRepository) {
+    public ClinicaService(ClinicaRepository clinicaRepository, ClinicaMedicoService clinicaMedicoService) {
         this.clinicaRepository = clinicaRepository;
+        this.clinicaMedicoService = clinicaMedicoService;
     }
 
     public Clinica findById(Long id) {
