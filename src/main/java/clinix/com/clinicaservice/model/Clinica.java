@@ -7,6 +7,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,8 +44,10 @@ public class Clinica {
     private Long gerenteId;
 
     // Referência a Médicos (IDs externos)
-    @OneToMany(mappedBy = "clinica", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @OneToMany(mappedBy = "clinica",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true,
+    fetch = FetchType.EAGER)
     private List<ClinicaMedico> medicos_vinculos = new ArrayList<>();
 
     @Column(name = "horario_abertura")

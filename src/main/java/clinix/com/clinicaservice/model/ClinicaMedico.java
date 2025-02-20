@@ -1,9 +1,11 @@
 package clinix.com.clinicaservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +31,7 @@ public class ClinicaMedico {
     @Column(name = "medico_id", nullable = false)
     private Long medicoId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinica_id", nullable = false)
     @JsonBackReference
     private Clinica clinica;
