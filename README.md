@@ -49,14 +49,30 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-A aplicação estará disponível em: `http://localhost:8080/api/clinix`
+A aplicação estará disponível em: `http://localhost:{SERVER_PORT}/{APP_NAME}`
 
 ## 📄 Endpoints Principais
+### Clinicas
 - `GET /clinicas` - Lista todas as clínicas
 - `POST /clinicas` - Cria uma nova clínica
+- `PUT /clinicas/{clinic_id}` - Atualiza as informações de uma Clínica
+- `GET /clinicas/{clinic_id}` - Procura por uma Clínica Específica
+### Vinculos
 - `GET /vinculos/{clinic_id}` - Lista todos os médicos vinculados a uma clinica
 - `POST /vinculos/solicitar/{clinic_id}/{medic_id}` - Solicita o vínculo de um médico a uma clínica
-- `Get vinculos/solicitacoes/{clinic_id}/` - Lista de Solicitações de vínculos
+- `GET vinculos/solicitacoes/{clinic_id}` - Lista de Solicitações de vínculos ainda não aprovadas 
+- `PUT vinculos/vincular/{clinic_id}/{medic_id}` - Aprova a solicitação de Vínculo de um médico 
+
+## Objetos Retornados:
+``` Java
+public class ClinicaMedico {
+Long id; # id da solicitação
+Long medicoId; # Id do Médico que possui um vinculo em aberto com a clínica 
+Clinica clinica; # Clínica na qual aquele vínculo pertence
+Boolean aprovado; # Situação do Vínculo, se ele foi aprovado (true), ou está em aberto (false)
+}
+
+```
 
 ## 📌 Considerações Finais
 Caso enfrente problemas de conexão com o banco de dados, verifique as configurações no `.env` e certifique-se de que o serviço PostgreSQL está rodando.
