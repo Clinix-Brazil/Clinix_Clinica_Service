@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import clinix.com.clinicaservice.DTO.HorarioDTO;
 import clinix.com.clinicaservice.model.Clinica;
+import clinix.com.clinicaservice.model.ClinicaMedico;
 import clinix.com.clinicaservice.service.ClinicaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
 @RestController
-@RequestMapping("/clinic")
+@RequestMapping("/clinicas")
 public class ClinicaController {
     ClinicaService clinicaService;
 
@@ -30,38 +30,29 @@ public class ClinicaController {
         this.clinicaService = clinicaService;
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     public List<Clinica> listar() {
         return this.clinicaService.findAll();
     }
+    
+    @PostMapping()
+    public Clinica create(@RequestBody Clinica clinic) {    
+        return this.clinicaService.create(clinic);
+    }
+
     @GetMapping("/{id}")
     public Clinica index (@PathVariable Long id){
         return this.clinicaService.findById(id);
-    }
-
-    @PostMapping("/register")
-    public Clinica create(@RequestBody Clinica clinic) {    
-        return this.clinicaService.create(clinic);
     }
     
     @PutMapping("/{id}")
     public Boolean update(@RequestBody Clinica clinic) {
         return this.clinicaService.update(clinic);
     }
-
+    
     @DeleteMapping("/{id}")
     public boolean delete(@PathVariable Long id) {
         return this.clinicaService.remove(id);
-    }
-
-    @PutMapping("vinculate/{clinic_id}/{medic_id}")
-    public Boolean vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
-        return this.clinicaService.vinculateMedic(clinic_id, medic_id);
-    }
-
-    @PutMapping("desvinculate/{clinic_id}/{medic_id}")
-    public boolean desvinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
-        return this.clinicaService.desvinculateMedic(clinic_id, medic_id);
     }
 
     @GetMapping("/patients/{id}")
