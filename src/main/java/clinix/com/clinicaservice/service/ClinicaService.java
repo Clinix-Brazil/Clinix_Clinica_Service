@@ -2,7 +2,6 @@ package clinix.com.clinicaservice.service;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,25 +66,6 @@ public class ClinicaService {
         }
     }
 
-    @Transactional
-    public ClinicaMedico solicitateVinculate(Long clinic_id, Long medic_id) {
-        Clinica c = this.findById(clinic_id);
-
-        ClinicaMedico cm = this.clinicaMedicoService.solicitate(c, medic_id);
-
-        c.addSolicitacao(cm);
-        return cm;
-    }
-
-    @Transactional
-    public ClinicaMedico vinculateMedic(Long clinic_id, Long medic_id) {
-        return this.clinicaMedicoService.vincular(medic_id, clinic_id);
-    }
-
-    @Transactional
-    public ClinicaMedico desvinculateMedic(Long clinic_id, Long medic_id) {
-        return this.clinicaMedicoService.desvincular(medic_id, clinic_id);
-        }
 
     public List<Long> getPatients(Long clinic_id) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
@@ -93,16 +73,6 @@ public class ClinicaService {
 
     }
 
-    public List<ClinicaMedico> getAllSolicitations(Long clinic_id) {
-        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        return c.getMedicos_vinculos();
-    }
-
-    public List<ClinicaMedico> getSolicitationsByStatus(Long clinic_id, boolean status) {
-        Clinica c = this.findById(clinic_id);
-        return this.clinicaMedicoService.findByStatus(c, status);
-
-    }
 
     public boolean checkExpediente(Long clinic_id, LocalTime horary_check) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
@@ -135,4 +105,66 @@ public class ClinicaService {
         c.setHorarioFechamento(horarioFechamento);
     }
 
+    /**
+     * Procura pelos médicos de uma determinada clínica com vínculos igual a
+     * verdeiro
+     * 
+     * @param clinic_id
+     * @return lista de IDs de médicos
+     */
+    public List<Long> getMedics(Long clinic_id) {
+        List<ClinicaMedico> cms = this.getSolicitationsByStatus(clinic_id, true);
+        return cms.stream()
+                .map(ClinicaMedico::getMedicoId)
+                .toList();
+    }
+
+    /**
+     * Procura pelas solicitações de vínculo determinada clínica
+     *
+     * 
+     * @param clinic_id
+     * @return lista de solicitações
+     */
+    public List<ClinicaMedico> getSolicitations(Long clinic_id) {
+        return this.getSolicitationsByStatus(clinic_id, false);
+    }
+
+    @Transactional
+    public ClinicaMedico solicitateVinculate(Long clinic_id, Long medic_id) {
+        Clinica c = this.findById(clinic_id);
+
+        ClinicaMedico cm = this.clinicaMedicoService.solicitate(c, medic_id);
+
+        c.addSolicitacao(cm);
+        return cm;
+    }
+
+    @Transactional
+    public ClinicaMedico vinculateMedic(Long clinic_id, Long medic_id) {
+        return this.clinicaMedicoService.vincular(medic_id, clinic_id);
+    }
+
+    @Transactional
+    public ClinicaMedico desvinculateMedic(Long clinic_id, Long medic_id) {
+        return this.clinicaMedicoService.desvincular(medic_id, clinic_id);
+    }
+
+    
+    public List<ClinicaMedico> getAllSolicitations(Long clinic_id) {
+        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+        return c.getMedicos_vinculos();
+    }
+
+    public List<ClinicaMedico> getSolicitationsByStatus(Long clinic_id, boolean status) {
+        Clinica c = this.findById(clinic_id);
+        return this.clinicaMedicoService.findByStatus(c, status);
+
+    }
+
+    @Transactional
+    public boolean refuseSolicitation(Long clinic_id, Long medic_id) {
+        Clinica c = this.findById(clinic_id);
+        return this.clinicaMedicoService.refuseSolicitation(c, medic_id);
+    }
 }

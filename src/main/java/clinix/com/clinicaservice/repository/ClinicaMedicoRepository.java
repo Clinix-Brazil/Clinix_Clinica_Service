@@ -15,5 +15,5 @@ public interface ClinicaMedicoRepository extends JpaRepository<ClinicaMedico, Lo
     
     Optional<ClinicaMedico> findByMedicoIdAndClinicaId(Long medicoId, Long clinicaId);
 
-    List<ClinicaMedico> findByClinicaIdAndStatus(Long id, boolean status);
+    List<ClinicaMedico> findByClinicaIdAndAprovado(Long id, boolean status);
 }

@@ -24,7 +24,7 @@ public class ClinicaMedicoService {
         return clinicaMedicoRepository.findByMedicoIdAndClinicaId(medicoId, clinicaId);
     }
 
-    public ClinicaMedico vincular(Long medicoId, Long clinicaId) {
+    public ClinicaMedico    vincular(Long medicoId, Long clinicaId) {
         ClinicaMedico cm = this.clinicaMedicoRepository.findByMedicoIdAndClinicaId(medicoId, clinicaId)
                 .orElseThrow(()-> new RuntimeException(" Solicitação de Vínculo não encontrada "));
         if (! cm.getAprovado() ) {
@@ -69,7 +69,7 @@ public class ClinicaMedicoService {
         ClinicaMedico cm = new ClinicaMedico(clinic, medic_id);
         return this.save(cm);
     }
-    public boolean recuseSolicitation(Clinica clinic, Long medic_id) {
+    public boolean refuseSolicitation(Clinica clinic, Long medic_id) {
         // Buscar a solicitação no banco
         Optional<ClinicaMedico> solicitation = this.find(medic_id, clinic.getId());
     
@@ -81,6 +81,6 @@ public class ClinicaMedicoService {
     }
 
     public List<ClinicaMedico> findByStatus(Clinica clinic, boolean status){
-        return this.clinicaMedicoRepository.findByClinicaIdAndStatus(clinic.getId(), status);
+        return this.clinicaMedicoRepository.findByClinicaIdAndAprovado(clinic.getId(), status);
     }
 }

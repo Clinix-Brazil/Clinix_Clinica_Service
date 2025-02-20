@@ -22,6 +22,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "tb_clinicas")
 @Data
@@ -42,6 +44,7 @@ public class Clinica {
 
     // Referência a Médicos (IDs externos)
     @OneToMany(mappedBy = "clinica", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<ClinicaMedico> medicos_vinculos = new ArrayList<>();
 
     @Column(name = "horario_abertura")
@@ -78,22 +81,23 @@ public class Clinica {
         this.tipo = outraClinica.getTipo();
         this.especialidades = outraClinica.getEspecialidades();
     }
-/* 
-    public ClinicaMedico encontrarVinculo(Long medicoId){
-
-        return this.medicos_vinculos.stream()
-        .filter( m -> m.getId().equals(medicoId))
-        .findFirst()
-        .orElse(null);
-    
-    } */ 
+    /*
+     * public ClinicaMedico encontrarVinculo(Long medicoId){
+     * 
+     * return this.medicos_vinculos.stream()
+     * .filter( m -> m.getId().equals(medicoId))
+     * .findFirst()
+     * .orElse(null);
+     * 
+     * }
+     */
 
     public Boolean addSolicitacao(ClinicaMedico solicitacao) {
-            return this.medicos_vinculos.add(solicitacao);
+        return this.medicos_vinculos.add(solicitacao);
     }
 
-    public boolean removerVinculo(ClinicaMedico vinculo){
-        if (this.medicos_vinculos.contains(vinculo)){
+    public boolean removerVinculo(ClinicaMedico vinculo) {
+        if (this.medicos_vinculos.contains(vinculo)) {
             this.medicos_vinculos.remove(vinculo);
             return true;
         }

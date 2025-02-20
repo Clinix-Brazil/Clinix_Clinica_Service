@@ -1,5 +1,7 @@
 package clinix.com.clinicaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class ClinicaMedico {
 
     @ManyToOne
     @JoinColumn(name = "clinica_id", nullable = false)
+    @JsonBackReference
     private Clinica clinica;
 
     private Boolean aprovado = false;
