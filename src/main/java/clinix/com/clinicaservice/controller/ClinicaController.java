@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import clinix.com.clinicaservice.DTO.HorarioDTO;
 import clinix.com.clinicaservice.model.Clinica;
+import clinix.com.clinicaservice.model.ClinicaMedico;
 import clinix.com.clinicaservice.service.ClinicaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,12 +56,12 @@ public class ClinicaController {
     }
 
     @PutMapping("vinculate/{clinic_id}/{medic_id}")
-    public Boolean vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
+    public ClinicaMedico vinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
         return this.clinicaService.vinculateMedic(clinic_id, medic_id);
     }
 
     @PutMapping("desvinculate/{clinic_id}/{medic_id}")
-    public boolean desvinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
+    public ClinicaMedico desvinculate(@PathVariable Long clinic_id, @PathVariable Long medic_id) {
         return this.clinicaService.desvinculateMedic(clinic_id, medic_id);
     }
 

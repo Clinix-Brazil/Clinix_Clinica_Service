@@ -11,8 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -89,22 +87,14 @@ public class Clinica {
         .orElse(null);
     
     } */ 
-    public Boolean vincular(Long medicoId) {
-        // Verificar se já existe um vínculo
-        //boolean existe = this.encontrarVinculo(medicoId) == null;
-        boolean existe = this.medicos_vinculos.stream().anyMatch(m -> m.getMedicoId().equals(medicoId));
 
-        if (!existe) {
-            ClinicaMedico vinculo = new ClinicaMedico(this, medicoId);
-            this.medicos_vinculos.add(vinculo);
-            return true;
-        }
-        return false;
+    public Boolean addSolicitacao(ClinicaMedico solicitacao) {
+            return this.medicos_vinculos.add(solicitacao);
     }
 
-    public boolean desvincular(Long medico_id) {
-        if (this.medicos_vinculos.contains(medico_id)) {
-            this.medicos_vinculos.remove(medico_id);
+    public boolean removerVinculo(ClinicaMedico vinculo){
+        if (this.medicos_vinculos.contains(vinculo)){
+            this.medicos_vinculos.remove(vinculo);
             return true;
         }
         return false;

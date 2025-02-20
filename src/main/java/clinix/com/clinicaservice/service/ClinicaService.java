@@ -2,12 +2,14 @@ package clinix.com.clinicaservice.service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import clinix.com.clinicaservice.DTO.HorarioDTO;
 import clinix.com.clinicaservice.model.Clinica;
+import clinix.com.clinicaservice.model.ClinicaMedico;
 import clinix.com.clinicaservice.model.NullClinica;
 import clinix.com.clinicaservice.repository.ClinicaRepository;
 import jakarta.transaction.Transactional;
@@ -25,7 +27,7 @@ public class ClinicaService {
     }
 
     public Clinica findById(Long id) {
-        return this.clinicaRepository.findById(id).orElse(new NullClinica());
+        return this.clinicaRepository.findById(id).orElseThrow(() -> new RuntimeException("Clínica Não Encontrada"));
     }
 
     public Clinica findByNomeFantasia(String nomeFantasia) {
@@ -49,7 +51,6 @@ public class ClinicaService {
         } catch (Exception e) {
             return false;
         }
-
     }
 
     public boolean remove(Long id) {
@@ -65,32 +66,26 @@ public class ClinicaService {
             return false;
         }
     }
-    @Transactional
-    public boolean vinculateMedic(Long clinic_id, Long medic_id) {
-        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
 
-        if (!c.isNull()) {
-            if (c.vincular(medic_id)) {
-                this.clinicaRepository.save(c);
-                return true;
-            }
-            ;
-        }
-        return false;
-    }
     @Transactional
-    public boolean desvinculateMedic(Long clinic_id, Long medic_id) {
-        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
+    public ClinicaMedico solicitateVinculate(Long clinic_id, Long medic_id) {
+        Clinica c = this.findById(clinic_id);
 
-        if (!c.isNull()) {
-            if (c.desvincular(medic_id)) {
-                this.clinicaRepository.save(c);
-                return true;
-            }
-            ;
-        }
-        return false;
+        ClinicaMedico cm = this.clinicaMedicoService.solicitate(c, medic_id);
+
+        c.addSolicitacao(cm);
+        return cm;
     }
+
+    @Transactional
+    public ClinicaMedico vinculateMedic(Long clinic_id, Long medic_id) {
+        return this.clinicaMedicoService.vincular(medic_id, clinic_id);
+    }
+
+    @Transactional
+    public ClinicaMedico desvinculateMedic(Long clinic_id, Long medic_id) {
+        return this.clinicaMedicoService.desvincular(medic_id, clinic_id);
+        }
 
     public List<Long> getPatients(Long clinic_id) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
@@ -98,9 +93,15 @@ public class ClinicaService {
 
     }
 
-    public List<Long> getMedics(Long clinic_id) {
+    public List<ClinicaMedico> getAllSolicitations(Long clinic_id) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        return c.getMedicos();
+        return c.getMedicos_vinculos();
+    }
+
+    public List<ClinicaMedico> getSolicitationsByStatus(Long clinic_id, boolean status) {
+        Clinica c = this.findById(clinic_id);
+        return this.clinicaMedicoService.findByStatus(c, status);
+
     }
 
     public boolean checkExpediente(Long clinic_id, LocalTime horary_check) {
@@ -109,6 +110,7 @@ public class ClinicaService {
             return false;
         return true;
     }
+
     @Transactional
     public boolean updateHorary(Long clinic_id, HorarioDTO new_horary) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
@@ -117,16 +119,18 @@ public class ClinicaService {
 
         if (!c.getHorarioAbertura().equals(new_horary.horaInicio()))
             this.updateStartHorary(c, new_horary.horaInicio());
-        
+
         if (!c.getHorarioFechamento().equals(new_horary.horaFinal()))
             this.updateEndHorary(c, new_horary.horaFinal());
         this.clinicaRepository.save(c);
         return true;
 
     }
+
     private void updateStartHorary(Clinica c, LocalTime horaInicio) {
-        c.setHorarioAbertura(horaInicio);}
-    
+        c.setHorarioAbertura(horaInicio);
+    }
+
     private void updateEndHorary(Clinica c, LocalTime horarioFechamento) {
         c.setHorarioFechamento(horarioFechamento);
     }

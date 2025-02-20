@@ -1,8 +1,6 @@
 package clinix.com.clinicaservice.model;
 
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
 
 import lombok.NoArgsConstructor;
 
@@ -35,14 +33,6 @@ public class NullClinica extends Clinica{
     public LocalTime getHorarioFechamento(){
         return LocalTime.now();
     } 
-    @Override
-    public List<Long> getMedicos() {
-        return Collections.emptyList(); // Lista vazia
-    }
-    @Override
-    public List<String> getEspecialidades() {
-        return Collections.emptyList(); // Lista vazia
-    }
 
     @Override
     public Boolean isNull(){

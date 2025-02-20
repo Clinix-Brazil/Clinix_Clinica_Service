@@ -1,8 +1,6 @@
 package clinix.com.clinicaservice.model;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +33,7 @@ public class ClinicaMedico {
 
     private Boolean aprovado = false;
 
-    ClinicaMedico( Clinica c, Long m ){
+    public ClinicaMedico( Clinica c, Long m ){
         this.clinica = c;
         this.medicoId = m;
     }
