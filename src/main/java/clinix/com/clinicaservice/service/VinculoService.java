@@ -11,12 +11,12 @@ import clinix.com.clinicaservice.model.ClinicaMedico;
 import clinix.com.clinicaservice.repository.ClinicaMedicoRepository;
 
 @Service
-public class ClinicaMedicoService {
+public class VinculoService {
 
     private final ClinicaMedicoRepository clinicaMedicoRepository;
 
     @Autowired
-    public ClinicaMedicoService(ClinicaMedicoRepository clinicaMedicoRepository) {
+    public VinculoService(ClinicaMedicoRepository clinicaMedicoRepository) {
         this.clinicaMedicoRepository = clinicaMedicoRepository;
     }
 

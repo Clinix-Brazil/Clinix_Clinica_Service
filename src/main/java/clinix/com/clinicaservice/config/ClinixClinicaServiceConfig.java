@@ -32,7 +32,7 @@ public class ClinixClinicaServiceConfig  {
     private static CorsConfiguration getCorsConfiguration() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:8082", "http://localhost:3000"));
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,

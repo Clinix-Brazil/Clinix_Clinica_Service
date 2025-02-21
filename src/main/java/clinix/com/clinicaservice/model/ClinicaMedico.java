@@ -1,8 +1,13 @@
 package clinix.com.clinicaservice.model;
 
+import java.time.LocalTime;
+
+import org.antlr.v4.runtime.misc.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,13 +38,23 @@ public class ClinicaMedico {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinica_id", nullable = false)
+    
     @JsonBackReference
     private Clinica clinica;
 
+    @Column(nullable = false)
     private Boolean aprovado = false;
 
-    public ClinicaMedico( Clinica c, Long m ){
+    @Column(name = "inicio_atendimento", nullable = false)
+    private LocalTime startTime;
+
+    @Column(name = "fim_atendimento", nullable = false)
+    private LocalTime endTime;
+
+    public ClinicaMedico( Clinica c, Long m, LocalTime s, LocalTime e){
         this.clinica = c;
         this.medicoId = m;
+        this.startTime = s;
+        this.endTime = e;
     }
 }
