@@ -12,11 +12,11 @@ import java.rmi.server.UnicastRemoteObject;
 @Service
 public class ClinicaServiceImpl extends UnicastRemoteObject implements ClinicaService {
 
-    @Autowired
-    private ClinicaRepository clinicaRepository;
+    private final ClinicaRepository clinicaRepository;
 
-    public ClinicaServiceImpl() throws RemoteException {
+    public ClinicaServiceImpl(ClinicaRepository clinicaRepository) throws RemoteException {
         super();
+        this.clinicaRepository = clinicaRepository;
     }
 
     @Override
