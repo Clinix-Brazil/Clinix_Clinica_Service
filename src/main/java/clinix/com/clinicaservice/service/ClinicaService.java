@@ -155,7 +155,11 @@ public class ClinicaService {
         Clinica c = this.findById(clinic_id);
         this.horaryService.alterarHorarioClinica(c, new_horary);
         return this.save(c);
-
+        
     }
-
+    public ClinicaMedico updateMedicHorary(Long clinic_id, Long m_id, HorarioDTO h_dto) {
+        Clinica c = this.findById(clinic_id);
+        return this.horaryService.alterarHorarioMedico(c,m_id, h_dto);
+        
+    }
 }
