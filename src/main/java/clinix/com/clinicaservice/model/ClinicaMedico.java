@@ -57,4 +57,10 @@ public class ClinicaMedico {
         this.startTime = s;
         this.endTime = e;
     }
+
+    // Quando o horário não está definido
+    public ClinicaMedico( Clinica c, Long m){
+        this.clinica = c;
+        this.medicoId = m;
+    }
 }
