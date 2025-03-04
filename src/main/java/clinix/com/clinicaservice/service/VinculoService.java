@@ -1,5 +1,6 @@
 package clinix.com.clinicaservice.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,12 +12,12 @@ import clinix.com.clinicaservice.model.ClinicaMedico;
 import clinix.com.clinicaservice.repository.ClinicaMedicoRepository;
 
 @Service
-public class ClinicaMedicoService {
+public class VinculoService {
 
     private final ClinicaMedicoRepository clinicaMedicoRepository;
 
     @Autowired
-    public ClinicaMedicoService(ClinicaMedicoRepository clinicaMedicoRepository) {
+    public VinculoService(ClinicaMedicoRepository clinicaMedicoRepository) {
         this.clinicaMedicoRepository = clinicaMedicoRepository;
     }
 
@@ -44,7 +45,7 @@ public class ClinicaMedicoService {
         return null;
     }
 
-    private ClinicaMedico save(ClinicaMedico cm) {
+    public ClinicaMedico save(ClinicaMedico cm) {
         return this.clinicaMedicoRepository.save(cm);
     }
 
@@ -82,5 +83,8 @@ public class ClinicaMedicoService {
 
     public List<ClinicaMedico> findByStatus(Clinica clinic, boolean status){
         return this.clinicaMedicoRepository.findByClinicaIdAndAprovado(clinic.getId(), status);
+    }
+    public List<ClinicaMedico> findByClinica(Clinica clinic){
+        return this.clinicaMedicoRepository.findByClinicaID(clinic.getId());
     }
 }

@@ -17,12 +17,16 @@ import jakarta.transaction.Transactional;
 public class ClinicaService {
 
     private final ClinicaRepository clinicaRepository;
-    private final ClinicaMedicoService clinicaMedicoService;
+    private final VinculoService vinculoService;
+    private final HoraryService horaryService;
 
     @Autowired
-    public ClinicaService(ClinicaRepository clinicaRepository, ClinicaMedicoService clinicaMedicoService) {
+    public ClinicaService(ClinicaRepository clinicaRepository,
+            VinculoService vinculoService,
+            HoraryService horaryService) {
         this.clinicaRepository = clinicaRepository;
-        this.clinicaMedicoService = clinicaMedicoService;
+        this.vinculoService = vinculoService;
+        this.horaryService = horaryService;
     }
 
     public Clinica findById(Long id) {
@@ -38,14 +42,18 @@ public class ClinicaService {
     }
 
     public Clinica create(Clinica clinica) {
-        return this.clinicaRepository.save(clinica);
+        return this.save(clinica);
 
+    }
+
+    public Clinica save(Clinica c){
+        return this.clinicaRepository.save(c);
     }
 
     public Boolean update(Clinica clinic) {
         /* clinic.atualizar(clinic); */
         try {
-            this.clinicaRepository.save(clinic);
+            this.save(clinic);
             return true;
         } catch (Exception e) {
             return false;
@@ -66,43 +74,10 @@ public class ClinicaService {
         }
     }
 
-
     public List<Long> getPatients(Long clinic_id) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
         return c.getPacientes();
 
-    }
-
-
-    public boolean checkExpediente(Long clinic_id, LocalTime horary_check) {
-        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        if (c.isNull() || !c.isDentroDoExpediente(horary_check))
-            return false;
-        return true;
-    }
-
-    @Transactional
-    public boolean updateHorary(Long clinic_id, HorarioDTO new_horary) {
-        Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
-        if (c.isNull())
-            return false;
-
-        if (!c.getHorarioAbertura().equals(new_horary.horaInicio()))
-            this.updateStartHorary(c, new_horary.horaInicio());
-
-        if (!c.getHorarioFechamento().equals(new_horary.horaFinal()))
-            this.updateEndHorary(c, new_horary.horaFinal());
-        this.clinicaRepository.save(c);
-        return true;
-
-    }
-
-    private void updateStartHorary(Clinica c, LocalTime horaInicio) {
-        c.setHorarioAbertura(horaInicio);
-    }
-
-    private void updateEndHorary(Clinica c, LocalTime horarioFechamento) {
-        c.setHorarioFechamento(horarioFechamento);
     }
 
     /**
@@ -134,7 +109,7 @@ public class ClinicaService {
     public ClinicaMedico solicitateVinculate(Long clinic_id, Long medic_id) {
         Clinica c = this.findById(clinic_id);
 
-        ClinicaMedico cm = this.clinicaMedicoService.solicitate(c, medic_id);
+        ClinicaMedico cm = this.vinculoService.solicitate(c, medic_id);
 
         c.addSolicitacao(cm);
         return cm;
@@ -142,15 +117,14 @@ public class ClinicaService {
 
     @Transactional
     public ClinicaMedico vinculateMedic(Long clinic_id, Long medic_id) {
-        return this.clinicaMedicoService.vincular(medic_id, clinic_id);
+        return this.vinculoService.vincular(medic_id, clinic_id);
     }
 
     @Transactional
     public ClinicaMedico desvinculateMedic(Long clinic_id, Long medic_id) {
-        return this.clinicaMedicoService.desvincular(medic_id, clinic_id);
+        return this.vinculoService.desvincular(medic_id, clinic_id);
     }
 
-    
     public List<ClinicaMedico> getAllSolicitations(Long clinic_id) {
         Clinica c = this.clinicaRepository.findById(clinic_id).orElse(new NullClinica());
         return c.getMedicos_vinculos();
@@ -158,13 +132,30 @@ public class ClinicaService {
 
     public List<ClinicaMedico> getSolicitationsByStatus(Long clinic_id, boolean status) {
         Clinica c = this.findById(clinic_id);
-        return this.clinicaMedicoService.findByStatus(c, status);
+        return this.vinculoService.findByStatus(c, status);
 
     }
 
     @Transactional
     public boolean refuseSolicitation(Long clinic_id, Long medic_id) {
         Clinica c = this.findById(clinic_id);
-        return this.clinicaMedicoService.refuseSolicitation(c, medic_id);
+        return this.vinculoService.refuseSolicitation(c, medic_id);
     }
+
+    // Checa se um determinado horário está de acordo com o horário de abertura e
+    // encerramento de uma clínica
+    public boolean checkExpediente(Long clinic_id, HorarioDTO horary_check) {
+        Clinica c = this.findById(clinic_id);
+        return this.horaryService.checkExpediente(c, horary_check);
+
+    }
+
+    @Transactional
+    public Clinica updateClinicHorary(Long clinic_id, HorarioDTO new_horary) {
+        Clinica c = this.findById(clinic_id);
+        this.horaryService.alterarHorarioClinica(c, new_horary);
+        return this.save(c);
+
+    }
+
 }

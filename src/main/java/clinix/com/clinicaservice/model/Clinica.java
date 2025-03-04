@@ -84,16 +84,6 @@ public class Clinica {
         this.tipo = outraClinica.getTipo();
         this.especialidades = outraClinica.getEspecialidades();
     }
-    /*
-     * public ClinicaMedico encontrarVinculo(Long medicoId){
-     * 
-     * return this.medicos_vinculos.stream()
-     * .filter( m -> m.getId().equals(medicoId))
-     * .findFirst()
-     * .orElse(null);
-     * 
-     * }
-     */
 
     public Boolean addSolicitacao(ClinicaMedico solicitacao) {
         return this.medicos_vinculos.add(solicitacao);
