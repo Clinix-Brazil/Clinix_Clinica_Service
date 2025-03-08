@@ -18,7 +18,7 @@ public interface ClinicaMedicoRepository extends JpaRepository<ClinicaMedico, Lo
 
     List<ClinicaMedico> findByClinicaIdAndAprovado(Long id, boolean status);
 
-    List<ClinicaMedico> findByClinicaID(Long id);
+    List<ClinicaMedico> findByClinicaId(Long id);
 
     @Query("SELECT cm FROM ClinicaMedico cm WHERE cm.clinica.id = :clinicaId AND cm.startTime < :horarioAbertura")
     List<ClinicaMedico> findHorariosBeforeClinicOpenning(@Param("clinicaId") Long clinicaId,
