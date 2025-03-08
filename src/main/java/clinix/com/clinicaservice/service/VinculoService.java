@@ -85,6 +85,6 @@ public class VinculoService {
         return this.clinicaMedicoRepository.findByClinicaIdAndAprovado(clinic.getId(), status);
     }
     public List<ClinicaMedico> findByClinica(Clinica clinic){
-        return this.clinicaMedicoRepository.findByClinicaID(clinic.getId());
+        return this.clinicaMedicoRepository.findByClinicaId(clinic.getId());
     }
 }
