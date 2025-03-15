@@ -34,7 +34,7 @@ public class ClinicaService {
     }
 
     public Clinica findByNomeFantasia(String nomeFantasia) {
-        return this.clinicaRepository.findByNomeFantasia(nomeFantasia).orElse(new NullClinica());
+        return this.clinicaRepository.findByNomeFantasia(nomeFantasia).orElseThrow(() -> new RuntimeException("Clínica Não Encontrada"));
     }
 
     public List<Clinica> findAll() {
