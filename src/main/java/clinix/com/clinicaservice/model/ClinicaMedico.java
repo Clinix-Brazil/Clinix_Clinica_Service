@@ -45,10 +45,10 @@ public class ClinicaMedico {
     @Column(nullable = false)
     private Boolean aprovado = false;
 
-    @Column(name = "inicio_atendimento", nullable = false)
+    @Column(name = "inicio_atendimento", nullable = true)
     private LocalTime startTime;
 
-    @Column(name = "fim_atendimento", nullable = false)
+    @Column(name = "fim_atendimento", nullable = true)
     private LocalTime endTime;
 
     public ClinicaMedico( Clinica c, Long m, LocalTime s, LocalTime e){

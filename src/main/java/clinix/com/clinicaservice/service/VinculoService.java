@@ -87,4 +87,6 @@ public class VinculoService {
     public List<ClinicaMedico> findByClinica(Clinica clinic){
         return this.clinicaMedicoRepository.findByClinicaId(clinic.getId());
     }
+
+    
 }
