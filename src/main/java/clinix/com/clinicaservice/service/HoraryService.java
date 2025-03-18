@@ -4,6 +4,9 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import clinix.com.clinicaservice.DTO.HorarioDTO;
@@ -34,6 +37,13 @@ public class HoraryService {
         return c.isDentroDoExpediente(horary_check);
     }
 
+    @Cacheable(value = "medicoHorarios", key = "'medico:' + #m_id + ':horario'")
+    public ClinicaMedico getHorarioMedico(Long m_id, Long clinicaId) {
+        System.out.println("Buscando horário no banco de dados...");
+        return this.vinculoService.find(m_id, clinicaId);
+    }
+
+
     /**
      * Updates the working hours of a doctor associated with a specific clinic.
      *
@@ -47,6 +57,7 @@ public class HoraryService {
      *                          operating hours,
      *                          or if the doctor-clinic association is not found
      */
+    @CachePut(value = "medicoHorarios", key = "'medico:' + #m_id + ':horario'")
     public ClinicaMedico alterarHorarioMedico(Clinica c, Long m_id, HorarioDTO new_horary) {
         boolean check = this.checkExpediente(c, new_horary);
         if (!check) {
@@ -54,14 +65,19 @@ public class HoraryService {
                     String.format("Horario inserido inválido, tente valores entre %t a %t ",
                             c.getHorarioAbertura(), c.getHorarioFechamento()));
         }
-        ClinicaMedico cm = this.vinculoService.find(m_id, c.getId()).orElseThrow(() -> {
-            throw new RuntimeException("Vinculo não encontrado");
-        });
+        ClinicaMedico cm = this.vinculoService.find(m_id, c.getId());
+
         cm.setStartTime(new_horary.horaInicio());
         cm.setStartTime(new_horary.horaFinal());
         return this.vinculoService.save(cm);
     }
 
+    @CacheEvict(value = "medicoHorarios", key = "'medico:' + #m_id + ':horario'")
+    public void removerCacheHorarioMedico(Long m_id) {
+        // Remove cache do médico para garantir que os dados sejam atualizados
+    }
+
+    @CacheEvict(value = "clinicaHorarios", key = "'clinica:' + #c.id + ':horario'")
     private ClinicaMedico atualizarHorario(ClinicaMedico cm, LocalTime newTime, HorarioTipo tipo) {
         if (tipo == HorarioTipo.START) {
             cm.setStartTime(newTime);

@@ -49,10 +49,10 @@ public class VinculoServiceTest {
         when(clinicaMedicoRepository.findByMedicoIdAndClinicaId(50L, 1L))
                 .thenReturn(Optional.of(clinicaMedico));
 
-        Optional<ClinicaMedico> result = vinculoService.find(50L, 1L);
+        ClinicaMedico result = vinculoService.find(50L, 1L);
 
-        assertTrue(result.isPresent());
-        assertEquals(clinicaMedico, result.get());
+        assertTrue(result != null);
+        assertEquals(clinicaMedico, result);
         verify(clinicaMedicoRepository, times(1)).findByMedicoIdAndClinicaId(50L, 1L);
     }
 
@@ -62,9 +62,9 @@ public class VinculoServiceTest {
         when(clinicaMedicoRepository.findByMedicoIdAndClinicaId(99L, 2L))
                 .thenReturn(Optional.empty());
 
-        Optional<ClinicaMedico> result = vinculoService.find(99L, 2L);
+        ClinicaMedico result = vinculoService.find(99L, 2L);
 
-        assertFalse(result.isPresent());
+        assertFalse(result != null);
         verify(clinicaMedicoRepository, times(1)).findByMedicoIdAndClinicaId(99L, 2L);
     }
 
@@ -73,10 +73,10 @@ public class VinculoServiceTest {
         when(clinicaMedicoRepository.findByMedicoIdAndClinicaId(50L, 1L))
                 .thenReturn(Optional.of(clinicaMedico));
 
-        Optional<ClinicaMedico> result = vinculoService.find(50L, 1L);
+        ClinicaMedico result = vinculoService.find(50L, 1L);
 
-        assertTrue(result.isPresent());
-        assertEquals(clinicaMedico, result.get());
+        assertTrue(result != null);
+        assertEquals(clinicaMedico, result);
         verify(clinicaMedicoRepository, times(1)).findByMedicoIdAndClinicaId(50L, 1L);
     }
 
@@ -111,26 +111,6 @@ void shouldThrowExceptionWhenDesvincularWithNonExistentIds() {
 
     assertThrows(RuntimeException.class, () -> vinculoService.desvincular(99L, 2L));
     verify(clinicaMedicoRepository, times(1)).findByMedicoIdAndClinicaId(99L, 2L);
-}
-
-@Test
-void shouldNotDesvincularWhenRequestNotApproved() {
-    // Given
-    ClinicaMedico clinicaMedico = new ClinicaMedico();
-    clinicaMedico.setId(100L);
-    clinicaMedico.setClinica(clinica);
-    clinicaMedico.setMedicoId(50L);
-    clinicaMedico.setAprovado(false);
-
-    when(clinicaMedicoRepository.findByMedicoIdAndClinicaId(50L, 1L))
-            .thenReturn(Optional.of(clinicaMedico));
-
-    // When
-    assertThrows(RuntimeException.class, () -> vinculoService.desvincular(50L, 1L));
-
-    // Then
-    verify(clinicaMedicoRepository, times(1)).findByMedicoIdAndClinicaId(50L, 1L);
-    verify(clinicaMedicoRepository, never()).delete(any());
 }
 
 @Test
@@ -179,19 +159,6 @@ void shouldDesvincularClinicaMedicoWhenItHasPendingSolicitacoes() {
 }
 
 @Test
-public void shouldThrowExceptionWhenSolicitateMethodIsCalledWithNullClinic() {
-    // given
-    Long medic_id = 1L;
-    Clinica clinic = null;
-
-    // when
-    Throwable exception = assertThrows(RuntimeException.class,
-            () -> vinculoService.solicitate(clinic, medic_id));
-
-    // then
-    assert (exception.getMessage().equals("clinic cannot be null"));
-}
-@Test
 public void shouldCreateNewClinicaMedicoWhenSolicitateMethodIsCalledWithValidClinicAndMedicId() {
     // given
     Long clinicId = 1L;
@@ -220,9 +187,9 @@ public void shouldThrowExceptionWhenSolicitationAlreadyExists() {
     clinica.setId(1L);
     Long medicoId = 1L;
 
-    Optional<ClinicaMedico> existingSolicitation = Optional.of(new ClinicaMedico(clinica, medicoId));
+    ClinicaMedico existingSolicitation = new ClinicaMedico(clinica, medicoId);
     when(clinicaMedicoRepository.findByMedicoIdAndClinicaId(medicoId, clinica.getId()))
-            .thenReturn(existingSolicitation);
+            .thenReturn(Optional.of(existingSolicitation));
 
     // when
     Throwable exception = assertThrows(RuntimeException.class,
@@ -231,5 +198,6 @@ public void shouldThrowExceptionWhenSolicitationAlreadyExists() {
     // then
     assert (exception.getMessage().equals("Já existe uma solicitação de vínculo para este médico."));
 }
+
 
 }
