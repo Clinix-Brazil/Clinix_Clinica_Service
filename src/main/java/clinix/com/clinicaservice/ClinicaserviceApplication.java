@@ -2,7 +2,6 @@ package clinix.com.clinicaservice;
 
 import clinix.com.clinicaservice.rmi.ClinicaServiceImpl;
 import com.clinix.api.interfaces.ClinicaService;
-import com.clinix.api.interfaces.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
