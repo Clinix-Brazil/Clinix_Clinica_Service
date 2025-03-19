@@ -98,15 +98,6 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.clinix</groupId>
-			<artifactId>clinix-common-service</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/clinix-common-service.jar</systemPath>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>
